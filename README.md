@@ -2,6 +2,14 @@
 
 This is a work in progress, but does work!
 
+These plots show the before and after for an image generated on a 
+[toy raytracer](https://github.com/time4tea/raytrace-in-a-weekend-kotlin) 
+
+The source image was generated using monte-carlo tracing with 100 samples/pixel. The scene renders in 34s.
+This was then passed through the OIDN-JNI library - with the result as shown.
+
+Its pretty good! - and is similar to outputs with many 1,000s of samples/pixel
+
 ## Before
 
 ![Example](oidnkt/src/test/resources/weekfinal.png)
@@ -28,3 +36,29 @@ You can look at the `OidnTest` class to see how to use the library - it requires
 You'll need to set `java.library.path` to find the oidnjni.so library, and *also* LD_LIBRARY_PATH so that the 
 dependencies can be found. The gradle build does this for you when running the tests...
 
+## Show me the code
+
+```kotlin
+    val oidn = Oidn()
+    val color = Oidn.allocateBuffer(image.width, image.height)
+    // put some data in the image...
+    val output = Oidn.allocateBuffer(image.width, image.height)
+
+    oidn.newDevice(Oidn.DeviceType.DEVICE_TYPE_DEFAULT).use { device ->
+        device.raytraceFilter().use { filter ->
+            filter.setFilterImage(
+                color, output, image.width, image.height
+            )
+            filter.commit()
+            filter.execute()
+            device.error()
+        }
+    }
+```
+
+## Performance
+
+The code is almost certainly far from optimal, no effort has gone into making it performant. However, running the filter
+ will dominate the performance of the code - the JNI wrapper is very thin.
+
+Processing the above image takes 0.35s on my laptop.
