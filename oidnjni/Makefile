@@ -29,8 +29,8 @@ all: build/liboidnjni.so
 print-%  : ; @echo $* = $($*)
 
 build/$(OIDN_NAME).tar.gz:
-	mkdir -p $(dirname $@)
-	curl -L -o $@ https://github.com/OpenImageDenoise/oidn/releases/download/v$(OIDN_VERSION)/$(OIDN_NAME).tar.gz
+	mkdir -p $(dir $@)
+	curl --silent --fail -L -o $@ https://github.com/OpenImageDenoise/oidn/releases/download/v$(OIDN_VERSION)/$(OIDN_NAME).tar.gz
 
 $(UNPACKED_LIB):	build/$(OIDN_NAME).tar.gz
 	tar -z -x -f $< --touch -C build
@@ -42,6 +42,6 @@ build/liboidnjni.so: $(UNPACKED_LIB) $(SRCS)
 clean:
 	rm -f build/lib*.so
 
-.PHONY: distclea
+.PHONY: distclean
 distclean:
 	rm -rf build
