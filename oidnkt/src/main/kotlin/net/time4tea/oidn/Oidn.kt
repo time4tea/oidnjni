@@ -1,7 +1,10 @@
 package net.time4tea.oidn
 
+import java.io.File
+import java.io.FileNotFoundException
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
+import java.nio.file.Files
 import java.time.Duration
 
 class Oidn {
@@ -24,10 +27,56 @@ class Oidn {
         return OidnDevice(jniNewDevice(type.primitive)).also { it.commit() }
     }
 
-    companion object {
-        init {
-            System.loadLibrary("oidnjni")
+    class OidnLibraryNotFoundError(s: String?, cause: Throwable?) : LinkageError(s, cause)
+
+    data class Library(val name: String, val version:Int? = null) {
+        fun filename(): String {
+            return if ( version == null ) {
+                "lib$name.so"
+            } else {
+                "lib$name.so.$version"
+            }
         }
+    }
+
+    companion object {
+        private val libraries = listOf(
+            Library("tbb", 2),
+            Library("tbbmalloc", 2),
+            Library("OpenImageDenoise"),
+            Library("oidnjni")
+        )
+
+        init {
+            loadLibrary()
+        }
+
+        fun loadLibrary() {
+            val useFilesystem = System.getProperty("oidnjni.filesystem")?.toBoolean() ?: false
+            if (!useFilesystem) {
+                val directory = Files.createTempDirectory("oidn").toFile().also { it.deleteOnExit() }
+                libraries.forEach {
+                    val lib = copyLibrary(it, directory)
+                    try {
+                        System.load(lib.absolutePath)
+                    } catch (e: UnsatisfiedLinkError) {
+                        throw OidnLibraryNotFoundError("Unable to load $it", e)
+                    }
+                }
+            }
+        }
+
+        private fun copyLibrary(resource: Library, directory: File): File {
+            val filename = resource.filename()
+            val destination = File(directory, filename)
+            destination.outputStream().use { dest ->
+                val stream = Oidn::class.java.getResourceAsStream("/$filename")?:throw FileNotFoundException(filename)
+                stream.use { source ->
+                    source.copyTo(dest)
+                }
+            }
+            return destination
+       }
 
         fun allocateBuffer(width: Int, height: Int): ByteBuffer {
             val capacity = width * height * 3 * 4
@@ -43,7 +92,13 @@ class OidnFilter(private val ptr: Long) : AutoCloseable {
     private external fun jniRelease(ptr: Long)
     private external fun jniCommit(ptr: Long)
     private external fun jniExecute(ptr: Long)
-    private external fun jniSetSharedFilterImage(ptr: Long, name: String, buffer: ByteBuffer, width: Int, height: Int)
+    private external fun jniSetSharedFilterImage(
+        ptr: Long,
+        name: String,
+        buffer: ByteBuffer,
+        width: Int,
+        height: Int
+    )
 
     override fun close() {
         jniRelease(ptr)

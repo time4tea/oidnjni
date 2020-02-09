@@ -51,6 +51,8 @@ task copyLibraries(type: Copy) {
     def jni_lib = oidnjni.ext.jni_lib
     from oidnjni.ext.oidn_libs, "${oidnjni.buildDir}/${jni_lib}"
     include "*.so"
+    include "libtbb.so.*"
+    include "libtbbmalloc.so.*"
     into libraries
 }
 
@@ -61,7 +63,13 @@ test {
     environment "LD_LIBRARY_PATH", file("${project(":oidnjni").buildDir}/oidn-1.1.0.x86_64.linux/lib").absolutePath
 }
 
-sourceSets.main.output.dir libraries, builtBy: copyLibraries
+sourceSets {
+    main {
+        resources {
+            srcDirs "src/main/resources", libraries
+        }
+    }
+}
 
 compileJava.dependsOn  copyLibraries
 clean.dependsOn  ':oidnjni:makeClean'
