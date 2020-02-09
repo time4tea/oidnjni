@@ -150,7 +150,7 @@ class OidnTest {
             throw IllegalArgumentException("unable to write file")
         }
 
-        if (displaying) Thread.sleep(3000)
+        if (displaying) Thread.sleep(500)
     }
 
     private fun imageVariance(image: FloatBufferedImage): Double {
