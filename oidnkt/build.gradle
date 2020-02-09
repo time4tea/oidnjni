@@ -59,8 +59,6 @@ task copyLibraries(type: Copy) {
 test {
     outputs.upToDateWhen {false}
     useJUnitPlatform()
-    systemProperty "java.library.path", file("${project(":oidnjni").buildDir}").absolutePath
-    environment "LD_LIBRARY_PATH", file("${project(":oidnjni").buildDir}/oidn-1.1.0.x86_64.linux/lib").absolutePath
 }
 
 sourceSets {
