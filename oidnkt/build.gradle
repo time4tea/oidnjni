@@ -142,11 +142,12 @@ bintray {
             vcsTag = project.version
             gpg {
                 sign = true
+                passphrase = System.getenv("BINTRAY_GPG_PASSPHRASE")
             }
             mavenCentralSync {
                 sync = false
                 user = System.getenv('SONATYPE_USER')
-                password = System.getenv('SONATYPE_KEY')
+                password = System.getenv('SONATYPE_PASSWORD')
                 close = '1'
             }
         }
