@@ -4,8 +4,6 @@
 ![Bintray](https://img.shields.io/bintray/v/time4tea/oss/oidnjni)
 ![Maven Central](https://img.shields.io/maven-central/v/net.time4tea/oidnjni)
 
-This is a work in progress, but does work!
-
 These plots show the before and after for an image generated on a 
 [toy raytracer](https://github.com/time4tea/raytrace-in-a-weekend-kotlin) 
 
@@ -23,24 +21,7 @@ Its pretty good! - and is similar to outputs with many 1,000s of samples/pixel
 ![Example](example-output/weekfinal.png)
 
 
-## How to build
-
-Right now, you'll need to compile the kotlin and C library 
-
-```$bash
-./gradlew assemble
-```
-
-This will create `oidnkt/build/libs/oidnkt-1.0-SNAPSHOT.jar` and `oidnjni/build/oidnlib/liboidnjni.so`
-
 ## How to use
-
-You can look at the `OidnTest` class to see how to use the library - it requires images in a float format.
-
-You'll need to set `java.library.path` to find the oidnjni.so library, and *also* LD_LIBRARY_PATH so that the 
-dependencies can be found. The gradle build does this for you when running the tests...
-
-## Show me the code
 
 ```kotlin
     val oidn = Oidn()
@@ -59,6 +40,8 @@ dependencies can be found. The gradle build does this for you when running the t
         }
     }
 ```
+
+You can look at the `OidnTest` class to see how to use the library - it requires images in a float format.
 
 ## Performance
 
