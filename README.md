@@ -1,5 +1,9 @@
 ### Kotlin / JNI Interface to Intel OIDN Image Denoise Library
 
+[![Codeship Status for time4tea/oidnjni](https://app.codeship.com/projects/18071270-27e7-0138-360a-1a649adba10d/status?branch=master)](https://app.codeship.com/projects/383796)
+![Bintray](https://img.shields.io/bintray/v/time4tea/oss/oidnjni)
+![Maven Central](https://img.shields.io/maven-central/v/net.time4tea/oidnjni)
+
 This is a work in progress, but does work!
 
 These plots show the before and after for an image generated on a 
