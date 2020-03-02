@@ -1,3 +1,4 @@
+.env
 /.gradle/
 /oidnkt/build/
 /oidnkt/out/

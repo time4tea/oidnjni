@@ -16,5 +16,5 @@ task make(type: Exec) {
 
 task makeClean(type: Exec) {
     environment "JAVA_HOME", Jvm.current().javaHome
-    commandLine "make", "distclean"
+    commandLine "make", "clean"
 }

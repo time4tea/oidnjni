@@ -102,9 +102,6 @@ class OidnTest {
 
     @Test
     fun something() {
-        println(System.getProperty("java.library.path"))
-        println(System.getenv("LD_LIBRARY_PATH"))
-
         val oidn = Oidn()
 
         val imageName = "weekfinal.png"
