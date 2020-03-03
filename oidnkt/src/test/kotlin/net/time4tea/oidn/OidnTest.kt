@@ -48,30 +48,31 @@ class OidnTest {
     }
 
     @Volatile //just a hack so we don't get "always false" warnings
-    private var displaying = false
+    private var displaying = true
 
     @Test
     fun something() {
         val oidn = Oidn()
 
+        // Load an image this will have "normal" pixel layout
         val imageName = "weekfinal.png"
         val imageInIntPixelLayout = javaClass.getResourceAsStream("""/$imageName""").use {
             ImageIO.read(it)
         }
 
+        // Allocate a BufferedImage with the same pixel layout that OIDN needs
         val imageInCorrectPixelLayout = OidnImages.newBufferedImageFrom(imageInIntPixelLayout)
 
         if (displaying) SwingFrame(imageInCorrectPixelLayout)
 
-        val color = Oidn.allocateBuffer(imageInIntPixelLayout.width, imageInIntPixelLayout.height)
-
-        imageInCorrectPixelLayout.copyTo(color)
-
-        val output = Oidn.allocateBuffer(imageInIntPixelLayout.width, imageInIntPixelLayout.height)
+        // Allocate input and output buffers, with input buffer having input image
+        val color = Oidn.allocateBufferFor(imageInIntPixelLayout).also { imageInCorrectPixelLayout.copyTo(it) }
+        val output = Oidn.allocateBufferFor(imageInIntPixelLayout)
 
         val variance = ImageVariance(imageInCorrectPixelLayout)
         val beforeVariance = variance.imageVariance()
 
+        // set up OIDN and run denoise filter
         oidn.newDevice(Oidn.DeviceType.DEVICE_TYPE_DEFAULT).use { device ->
             device.raytraceFilter().use { filter ->
                 filter.setFilterImage(
@@ -83,6 +84,7 @@ class OidnTest {
             }
         }
 
+        // Copy output pixel data to displayable image
         output.copyTo(imageInCorrectPixelLayout)
 
         val afterVariance = variance.imageVariance()
@@ -92,8 +94,10 @@ class OidnTest {
 
         assertThat("after image should be less noisy", afterVariance, lessThan(beforeVariance))
 
+        // Copy image to original pixel layout, so it can be written
         imageInCorrectPixelLayout.copyTo(imageInIntPixelLayout)
 
+        // Write the output image to a file
         if (!ImageIO.write(
                 imageInIntPixelLayout,
                 "png",

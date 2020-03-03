@@ -88,6 +88,10 @@ class Oidn {
             buffer.order(ByteOrder.LITTLE_ENDIAN)
             return buffer.asFloatBuffer()
         }
+
+        fun allocateBufferFor(image: BufferedImage) : FloatBuffer {
+            return allocateBuffer(image.width, image.height)
+        }
     }
 }
 
