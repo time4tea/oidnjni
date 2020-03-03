@@ -18,7 +18,6 @@ function maven_publish {
     if [[ $PUBLISHED == "0" ]]; then
         echo "$PACKAGE is already published. Skipping"
     else
-        set -x
         echo "Publishing $PACKAGE $LOCAL_VERSION into Maven central..."
         RESULT=$(curl -s -X POST -u "$BINTRAY_USER:$BINTRAY_API_KEY" -H "Content-Type: application/json" --data "$PAYLOAD" "https://bintray.com/api/v1/maven_central_sync/time4tea/oss/$PACKAGE/versions/$LOCAL_VERSION")
 
