@@ -36,7 +36,7 @@ function ensure_release_commit {
     fi
 }
 
-#ensure_release_commit
+ensure_release_commit
 
 maven_publish "oidnjni"
 
