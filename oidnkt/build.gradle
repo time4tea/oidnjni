@@ -14,7 +14,7 @@ apply plugin: 'maven-publish'
 group 'net.time4tea'
 version = project.hasProperty('releaseVersion') ? project.releaseVersion : 'LOCAL'
 
-description = 'Java/Kotlin Interface to Intel Open Image Denoice - OIDN - library'
+description = 'Java/Kotlin Interface to Intel Open Image Denoise - OIDN - library'
 
 sourceCompatibility = 1.8
 
