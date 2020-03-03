@@ -49,3 +49,13 @@ The code is almost certainly far from optimal, no effort has gone into making it
  will dominate the performance of the code - the JNI wrapper is very thin.
 
 Processing the above image takes 0.35s on my laptop.
+
+## TODO
+
+- [ ] Mac / Windows - I have no hardware - contributors wanted!
+- [ ] HDR Images    - I have no use-case - contributors wanted!
+
+## Contributors
+
+Contributors are welcome! Either for new use-cases, or new features.
+
