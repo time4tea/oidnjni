@@ -1,9 +1,13 @@
 package net.time4tea.oidn
 
+import java.awt.Transparency
+import java.awt.color.ColorSpace
+import java.awt.image.*
 import java.io.File
 import java.io.FileNotFoundException
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
+import java.nio.FloatBuffer
 import java.nio.file.Files
 import java.time.Duration
 
@@ -29,9 +33,9 @@ class Oidn {
 
     class OidnLibraryNotFoundError(s: String?, cause: Throwable?) : LinkageError(s, cause)
 
-    data class Library(val name: String, val version:Int? = null) {
+    data class Library(val name: String, val version: Int? = null) {
         fun filename(): String {
-            return if ( version == null ) {
+            return if (version == null) {
                 "lib$name.so"
             } else {
                 "lib$name.so.$version"
@@ -70,19 +74,47 @@ class Oidn {
             val filename = resource.filename()
             val destination = File(directory, filename)
             destination.outputStream().use { dest ->
-                val stream = Oidn::class.java.getResourceAsStream("/$filename")?:throw FileNotFoundException(filename)
+                val stream = Oidn::class.java.getResourceAsStream("/$filename") ?: throw FileNotFoundException(filename)
                 stream.use { source ->
                     source.copyTo(dest)
                 }
             }
             return destination
-       }
+        }
 
-        fun allocateBuffer(width: Int, height: Int): ByteBuffer {
+        fun allocateBuffer(width: Int, height: Int): FloatBuffer {
             val capacity = width * height * 3 * 4
             val buffer = ByteBuffer.allocateDirect(capacity)
             buffer.order(ByteOrder.LITTLE_ENDIAN)
-            return buffer
+            return buffer.asFloatBuffer()
+        }
+    }
+}
+
+class OidnImages {
+    companion object {
+
+        fun newBufferedImage(width: Int, height: Int): BufferedImage {
+            val bands = 3
+            val bandOffsets = intArrayOf(0, 1, 2) // length == bands, 0 == R, 1 == G, 2 == B
+
+            val sampleModel: SampleModel =
+                PixelInterleavedSampleModel(DataBuffer.TYPE_FLOAT, width, height, bands, width * bands, bandOffsets)
+            val buffer = DataBufferFloat(width * height * bands)
+
+            val raster = Raster.createWritableRaster(sampleModel, buffer, null)
+
+            val colorSpace = ColorSpace.getInstance(ColorSpace.CS_sRGB)
+            val colorModel: ColorModel =
+                ComponentColorModel(colorSpace, false, false, Transparency.OPAQUE, DataBuffer.TYPE_FLOAT)
+
+            return BufferedImage(colorModel, raster, colorModel.isAlphaPremultiplied, null)
+        }
+
+        fun newBufferedImageFrom(src: BufferedImage): BufferedImage {
+            return newBufferedImage(src.width, src.height).also { dest ->
+                src.copyTo(dest)
+            }
         }
     }
 }
@@ -95,7 +127,7 @@ class OidnFilter(private val ptr: Long) : AutoCloseable {
     private external fun jniSetSharedFilterImage(
         ptr: Long,
         name: String,
-        buffer: ByteBuffer,
+        buffer: FloatBuffer,
         width: Int,
         height: Int
     )
@@ -112,16 +144,16 @@ class OidnFilter(private val ptr: Long) : AutoCloseable {
         timed("${javaClass.name}:execute") { jniExecute(ptr) }
     }
 
-    fun setFilterImage(colour: ByteBuffer, output: ByteBuffer, width: Int, height: Int) {
+    fun setFilterImage(colour: FloatBuffer, output: FloatBuffer, width: Int, height: Int) {
         jniSetSharedFilterImage(ptr, "color", ensureDirect(colour), width, height)
         jniSetSharedFilterImage(ptr, "output", ensureDirect(output), width, height)
     }
 
-    private fun ensureDirect(b: ByteBuffer): ByteBuffer {
-        if (!b.isDirect) {
+    private fun ensureDirect(buffer: FloatBuffer): FloatBuffer {
+        if (!buffer.isDirect) {
             throw IllegalArgumentException("Must be direct")
         }
-        return b
+        return buffer
     }
 }
 
