@@ -63,6 +63,12 @@ Processing the above image takes 0.35s on my laptop.
 - [ ] Mac / Windows - I have no hardware - contributors wanted!
 - [ ] HDR Images    - I have no use-case - contributors wanted!
 
+## Projects that use the OidnJNI library 
+
+Please let me know if your project uses or wants to use this small library
+
+- [Raytrace in a weekend Kotlin](https://github.com/time4tea/raytrace-in-a-weekend-kotlin)
+
 ## Contributors
 
 Contributors are welcome! Either for new use-cases, or new features.
