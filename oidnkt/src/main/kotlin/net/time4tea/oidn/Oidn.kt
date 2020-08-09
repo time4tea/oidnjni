@@ -144,8 +144,12 @@ class OidnFilter(private val ptr: Long) : AutoCloseable {
         jniCommit(ptr)
     }
 
+    fun executeTimed() {
+        timed("${javaClass.name}:execute") { execute() }
+    }
+
     fun execute() {
-        timed("${javaClass.name}:execute") { jniExecute(ptr) }
+        jniExecute(ptr)
     }
 
     fun setFilterImage(colour: FloatBuffer, output: FloatBuffer, width: Int, height: Int) {
