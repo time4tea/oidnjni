@@ -144,13 +144,24 @@ class OidnFilter(private val ptr: Long) : AutoCloseable {
         jniCommit(ptr)
     }
 
+    fun executeTimed() {
+        timed("${javaClass.name}:execute") { execute() }
+    }
+
     fun execute() {
-        timed("${javaClass.name}:execute") { jniExecute(ptr) }
+        jniExecute(ptr)
     }
 
     fun setFilterImage(colour: FloatBuffer, output: FloatBuffer, width: Int, height: Int) {
         jniSetSharedFilterImage(ptr, "color", ensureDirect(colour), width, height)
         jniSetSharedFilterImage(ptr, "output", ensureDirect(output), width, height)
+    }
+
+    fun setAdditionalImages(albedo: FloatBuffer, normal: FloatBuffer?, width: Int, height: Int) {
+        jniSetSharedFilterImage(ptr, "albedo", ensureDirect(albedo), width, height)
+        if (normal != null) {
+            jniSetSharedFilterImage(ptr, "normal", ensureDirect(normal), width, height)
+        }
     }
 
     private fun ensureDirect(buffer: FloatBuffer): FloatBuffer {

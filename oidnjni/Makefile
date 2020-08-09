@@ -8,7 +8,7 @@ __check_defined = \
 
 $(call check_defined, JAVA_HOME, java home for jni include files)
 
-OIDN_VERSION=1.1.0
+OIDN_VERSION=1.2.2
 
 OIDN_NAME=oidn-$(OIDN_VERSION).x86_64.linux
 OIDN_PATH=$(realpath build/$(OIDN_NAME))
@@ -36,7 +36,7 @@ $(UNPACKED_LIB):	build/$(OIDN_NAME).tar.gz
 	tar -z -x -f $< --touch -C build
 
 build/liboidnjni.so: $(UNPACKED_LIB) $(SRCS)
-	$(CC) -shared -Wl,--no-as-needed $(foreach d, $(INCLUDE), -I$d) $(foreach d, $(LIB), -L$d) -lOpenImageDenoise $(SRCS) -o $@
+	$(CC) -shared -fpic -Wl,--no-as-needed $(foreach d, $(INCLUDE), -I$d) $(foreach d, $(LIB), -L$d) -lOpenImageDenoise $(SRCS) -o $@
 
 .PHONY: clean
 clean:
