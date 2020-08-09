@@ -153,6 +153,13 @@ class OidnFilter(private val ptr: Long) : AutoCloseable {
         jniSetSharedFilterImage(ptr, "output", ensureDirect(output), width, height)
     }
 
+    fun setAdditionalImages(albedo: FloatBuffer, normal: FloatBuffer?, width: Int, height: Int) {
+        jniSetSharedFilterImage(ptr, "albedo", ensureDirect(albedo), width, height)
+        if (normal != null) {
+            jniSetSharedFilterImage(ptr, "normal", ensureDirect(normal), width, height)
+        }
+    }
+
     private fun ensureDirect(buffer: FloatBuffer): FloatBuffer {
         if (!buffer.isDirect) {
             throw IllegalArgumentException("Must be direct")
