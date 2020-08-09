@@ -71,5 +71,7 @@ Please let me know if your project uses or wants to use this small library
 
 ## Contributors
 
+[@leMaik](https://github.com/leMaik)
+
 Contributors are welcome! Either for new use-cases, or new features.
 
