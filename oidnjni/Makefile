@@ -36,7 +36,7 @@ $(UNPACKED_LIB):	build/$(OIDN_NAME).tar.gz
 	tar -z -x -f $< --touch -C build
 
 build/liboidnjni.so: $(UNPACKED_LIB) $(SRCS)
-	$(CC) -shared -Wl,--no-as-needed $(foreach d, $(INCLUDE), -I$d) $(foreach d, $(LIB), -L$d) -lOpenImageDenoise $(SRCS) -o $@
+	$(CC) -shared -fpic -Wl,--no-as-needed $(foreach d, $(INCLUDE), -I$d) $(foreach d, $(LIB), -L$d) -lOpenImageDenoise $(SRCS) -o $@
 
 .PHONY: clean
 clean:
