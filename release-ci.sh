@@ -5,7 +5,7 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-branch=$(git rev-parse --abbrev-ref HEAD)
+branch=${CI_BRANCH:-$(git rev-parse --abbrev-ref HEAD)}
 
 if [ $branch != "master" ]
 then
