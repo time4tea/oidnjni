@@ -80,7 +80,7 @@ class OidnTest {
                 )
                 filter.commit()
                 filter.execute()
-                device.error()
+                assertThat("should have no errors", device.error().ok(), equalTo(true))
             }
         }
 

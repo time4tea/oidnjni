@@ -18,16 +18,20 @@ Java_net_time4tea_oidn_OidnDevice_jniRelease (JNIEnv *env, jobject obj, jlong pt
     oidnReleaseDevice( (OIDNDevice) ptr)  ;
 }
 
-JNIEXPORT void JNICALL
-Java_net_time4tea_oidn_OidnDevice_jniGetError(JNIEnv *env, jobject obj, jlong ptr) {
+static jobject getDeviceError(JNIEnv *env, OIDNDevice device) {
+       const char* errorMessage;
+       int errorCode = oidnGetDeviceError( device, &errorMessage);
 
-    const char* errorMessage;
-    if (oidnGetDeviceError( (OIDNDevice) ptr, &errorMessage) != OIDN_ERROR_NONE) {
-        printf("Error: %s\n", errorMessage);
-    }
-    else {
-        printf("No error!");
-    }
+       jstring errorString = (*env)->NewStringUTF(env, errorMessage);
+       jobject cls = (*env)->FindClass(env, "net/time4tea/oidn/OidnDeviceError");
+       jmethodID constructor = (*env)->GetMethodID(env, cls, "<init>", "(ILjava/lang/String;)V");
+
+       return  (*env)->NewObject(env, cls, constructor, errorCode, errorString);
+}
+
+JNIEXPORT jobject JNICALL
+Java_net_time4tea_oidn_OidnDevice_jniGetError(JNIEnv *env, jobject obj, jlong ptr) {
+    return getDeviceError(env, (OIDNDevice) ptr);
 }
 
 JNIEXPORT jlong JNICALL Java_net_time4tea_oidn_OidnDevice_jniNewFilter (JNIEnv *env, jobject obj, jlong ptr, jstring type) {

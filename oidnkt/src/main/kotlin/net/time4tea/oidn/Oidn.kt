@@ -9,7 +9,6 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
 import java.nio.file.Files
-import java.time.Duration
 
 class Oidn {
 
@@ -56,16 +55,13 @@ class Oidn {
         }
 
         fun loadLibrary() {
-            val useFilesystem = System.getProperty("oidnjni.filesystem")?.toBoolean() ?: false
-            if (!useFilesystem) {
-                val directory = Files.createTempDirectory("oidn").toFile().also { it.deleteOnExit() }
-                libraries.forEach {
-                    val lib = copyLibrary(it, directory)
-                    try {
-                        System.load(lib.absolutePath)
-                    } catch (e: UnsatisfiedLinkError) {
-                        throw OidnLibraryNotFoundError("Unable to load $it", e)
-                    }
+            val directory = Files.createTempDirectory("oidn").toFile().also { it.deleteOnExit() }
+            libraries.forEach {
+                val lib = copyLibrary(it, directory)
+                try {
+                    System.load(lib.absolutePath)
+                } catch (e: UnsatisfiedLinkError) {
+                    throw OidnLibraryNotFoundError("Unable to load $it", e)
                 }
             }
         }
@@ -89,7 +85,7 @@ class Oidn {
             return buffer.asFloatBuffer()
         }
 
-        fun allocateBufferFor(image: BufferedImage) : FloatBuffer {
+        fun allocateBufferFor(image: BufferedImage): FloatBuffer {
             return allocateBuffer(image.width, image.height)
         }
     }
@@ -144,10 +140,6 @@ class OidnFilter(private val ptr: Long) : AutoCloseable {
         jniCommit(ptr)
     }
 
-    fun executeTimed() {
-        timed("${javaClass.name}:execute") { execute() }
-    }
-
     fun execute() {
         jniExecute(ptr)
     }
@@ -172,14 +164,21 @@ class OidnFilter(private val ptr: Long) : AutoCloseable {
     }
 }
 
-inline fun <T> timed(name: String, op: () -> T): T {
-    val start = System.nanoTime()
-    try {
-        return op()
-    } finally {
-        val elapsed = Duration.ofNanos(System.nanoTime() - start)
-        println("$name took $elapsed")
-    }
+enum class OidnError(val code: Int, val isError: Boolean, val explanation: String) {
+    OIDN_ERROR_NONE(0, false, "no error occurred"),
+    OIDN_ERROR_UNKNOWN(1, true, "an unknown error occurred"),
+    OIDN_ERROR_INVALID_ARGUMENT(2, true, "an invalid argument was specified"),
+    OIDN_ERROR_INVALID_OPERATION(3, true, "the operation is not allowed"),
+    OIDN_ERROR_OUT_OF_MEMORY(4, true, "not enough memory to execute the operation"),
+    OIDN_ERROR_UNSUPPORTED_HARDWARE(5, true, "the hardware (e.g. CPU) is not supported"),
+    OIDN_ERROR_CANCELLED(6, true, "the operation was cancelled by the user")
+}
+
+class OidnDeviceError(code: Int, cmsg: String?) {
+    val message = cmsg ?: "no error message"
+    val error: OidnError = OidnError.values().find { it.code == code } ?: OidnError.OIDN_ERROR_UNKNOWN
+
+    fun ok(): Boolean = !error.isError
 }
 
 class OidnDevice(private val ptr: Long) : AutoCloseable {
@@ -187,7 +186,7 @@ class OidnDevice(private val ptr: Long) : AutoCloseable {
     private external fun jniRelease(ptr: Long)
 
     private external fun jniNewFilter(ptr: Long, type: String): Long
-    private external fun jniGetError(ptr: Long)
+    private external fun jniGetError(ptr: Long): OidnDeviceError
 
     fun commit() {
         jniCommit(ptr)
@@ -197,8 +196,8 @@ class OidnDevice(private val ptr: Long) : AutoCloseable {
         return OidnFilter(jniNewFilter(ptr, "RT"))
     }
 
-    fun error() {
-        jniGetError(ptr)
+    fun error(): OidnDeviceError {
+        return jniGetError(ptr)
     }
 
     override fun close() {
