@@ -5,6 +5,15 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
+
+branch=$(git rev-parse --abbrev-ref HEAD)
+
+if [ $branch != "master" ]
+then
+  echo "Not making a release from a branch: $branch"
+  exit 0
+fi
+
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 LOCAL_VERSION=$(jq -r .version $DIR/version.json)

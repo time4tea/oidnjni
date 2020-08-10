@@ -5,7 +5,14 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-echo `git rev-parse --abbrev-ref HEAD`
+branch=$(git rev-parse --abbrev-ref HEAD)
+
+if [ $branch != "master" ]
+then
+  echo "Not making a release from a branch: $branch"
+  exit 0
+fi
+
 
 DIR=$(readlink -f $(dirname $0))
 
