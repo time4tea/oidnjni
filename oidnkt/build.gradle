@@ -18,6 +18,8 @@ description = 'Java/Kotlin Interface to Intel Open Image Denoise - OIDN - librar
 
 sourceCompatibility = 1.8
 
+def headless = System.getenv("DISPLAY") == null
+
 repositories {
     mavenCentral()
 }
@@ -65,6 +67,7 @@ task copyLibraries(type: Copy) {
 test {
     outputs.upToDateWhen {false}
     useJUnitPlatform()
+    jvmArgs = headless ? [ "-Djava.awt.headless=true"] : []
 }
 
 sourceSets {

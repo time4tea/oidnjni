@@ -48,7 +48,7 @@ class OidnTest {
     }
 
     @Volatile //just a hack so we don't get "always false" warnings
-    private var displaying = true
+    private var displaying = ! System.getProperty("java.awt.headless", "false").toBoolean()
 
     @Test
     fun something() {
