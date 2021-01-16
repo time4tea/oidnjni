@@ -12,4 +12,4 @@ ensure_master
 
 git clone https://"${GITHUB_TOKEN}"@github.com/time4tea/oidnjni.git tmp/
 
-( cd tmp && create_tag )
+( cd tmp && git config user.email "nobody@example.com" && git config user.name "CI Runner" && create_tag )
