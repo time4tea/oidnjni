@@ -1,6 +1,13 @@
 ## Changelog
 
+### v0.1.13
 
+- Bump OIDN Library to 1.2.4
+- Add OidnDevice.version() to get underlying library version
+
+### v0.1.7 - v0.1.12
+
+- Not released to public - just debugging the release process
 
 ### v0.1.6 
  
