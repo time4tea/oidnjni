@@ -1,4 +1,4 @@
-### Kotlin / Java JNI Interface to Intel Image Denoise Library (OIDN)
+### Kotlin / Java JNI Interface to Intel Open Image Denoise Library (OIDN)
 
 ![Bintray](https://img.shields.io/bintray/v/time4tea/oss/oidnjni)
 ![Maven Central](https://img.shields.io/maven-central/v/net.time4tea/oidnjni)
@@ -48,7 +48,25 @@ dependencies {
     }
 ```
 
-You can look at the `OidnTest` class to see how to use the library - it requires images in a float format.
+You can look at the `OidnTest` class for an example usage of the library.
+
+The OIDN library requires a specific raster format, which the Java standard library supports, but does 
+not give an easy way to create. Use `OidnImages.newBufferedImage()` to create a new buffered image.
+
+Similarly, none of the ImageIO libraries support the raster format. You'll need to create a `BufferedImage`
+in a standard format for these functions to work.
+
+```kotlin
+fun save(image: BufferedImage, file: File) {
+        val dest = BufferedImage(image.width, image.height, BufferedImage.TYPE_INT_RGB)
+        try {
+            image.copyTo(dest)
+            ImageIO.write(dest, "PNG", file)
+        } finally {
+            dest.flush()
+        }
+}
+```
 
 ## Performance
 
