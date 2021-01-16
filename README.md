@@ -3,13 +3,9 @@
 ![Bintray](https://img.shields.io/bintray/v/time4tea/oss/oidnjni)
 ![Maven Central](https://img.shields.io/maven-central/v/net.time4tea/oidnjni)
 
-These plots show the before and after for an image generated on a 
-[toy raytracer](https://github.com/time4tea/raytrace-in-a-weekend-kotlin) 
+## What is this?
 
-The source image was generated with a low number of samples/pixel.
-This was then passed through the OIDN-JNI library - with the result as shown.
-
-Its pretty good! - and is similar to outputs with many 1,000s of samples/pixel
+Its a Kotlin library and JNI interface to the [Intel Open Image Denoise Library](https://www.openimagedenoise.org) 
 
 ## Before
 
