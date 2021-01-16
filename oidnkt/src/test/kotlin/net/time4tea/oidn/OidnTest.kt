@@ -54,7 +54,25 @@ class OidnTest {
     private var displaying = ! System.getProperty("java.awt.headless", "false").toBoolean()
 
     @Test
-    fun something() {
+    fun `version from encoded`() {
+        assertThat(OidnDevice.Version(10_23_45), equalTo(OidnDevice.Version(10, 23, 45)))
+        assertThat(OidnDevice.Version(1_02_09), equalTo(OidnDevice.Version(1, 2, 9)))
+    }
+
+    @Test
+    fun `version formatting`() {
+        assertThat(OidnDevice.Version(1, 2, 3).string(), equalTo("1.02.003"))
+    }
+
+    @Test
+    fun `library version`() {
+        val oidn = Oidn()
+        val version = oidn.newDevice(Oidn.DeviceType.DEVICE_TYPE_DEFAULT).use { device -> device.version() }
+        assertThat(version, equalTo(OidnDevice.Version(1, 2, 4)))
+    }
+
+    @Test
+    fun `denoising an image`() {
         val oidn = Oidn()
 
         // Load an image this will have "normal" pixel layout

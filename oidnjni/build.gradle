@@ -1,7 +1,7 @@
 import org.gradle.internal.jvm.Jvm
 
 ext {
-    oidn_version = "1.2.2"
+    oidn_version = "1.2.4"
     oidn_linux = "oidn-${oidn_version}.x86_64.linux"
     oidn_dir="${buildDir}/${oidn_linux}"
     oidn_libs="${oidn_dir}/lib"

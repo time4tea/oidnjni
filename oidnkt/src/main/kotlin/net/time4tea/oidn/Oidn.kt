@@ -185,8 +185,19 @@ class OidnDevice(private val ptr: Long) : AutoCloseable {
     private external fun jniCommit(ptr: Long)
     private external fun jniRelease(ptr: Long)
 
+    private external fun jniVersion(ptr: Long): Int
+
     private external fun jniNewFilter(ptr: Long, type: String): Long
     private external fun jniGetError(ptr: Long): OidnDeviceError
+
+    data class Version(val major: Int, val minor: Int, val patch: Int) {
+
+        constructor(encoded: Int) : this(encoded / 10_000, (encoded % 10000) / 100, encoded % 100)
+
+        fun string(): String {
+            return "%d.%02d.%03d".format(major, minor, patch)
+        }
+    }
 
     fun commit() {
         jniCommit(ptr)
@@ -202,5 +213,9 @@ class OidnDevice(private val ptr: Long) : AutoCloseable {
 
     override fun close() {
         jniRelease(ptr)
+    }
+
+    fun version(): Version {
+        return Version(jniVersion(ptr))
     }
 }

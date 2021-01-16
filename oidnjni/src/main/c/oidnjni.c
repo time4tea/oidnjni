@@ -18,6 +18,11 @@ Java_net_time4tea_oidn_OidnDevice_jniRelease (JNIEnv *env, jobject obj, jlong pt
     oidnReleaseDevice( (OIDNDevice) ptr)  ;
 }
 
+JNIEXPORT void JNICALL
+Java_net_time4tea_oidn_OidnDevice_jniVersion (JNIEnv *env, jobject obj, jlong ptr) {
+    return (jint) oidnGetDevice1i( (OIDNDevice) ptr, "version" );
+}
+
 static jobject getDeviceError(JNIEnv *env, OIDNDevice device) {
        const char* errorMessage;
        int errorCode = oidnGetDeviceError( device, &errorMessage);

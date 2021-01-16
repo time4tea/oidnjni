@@ -50,6 +50,7 @@ task javah(type: Exec) {
     dependsOn classes
 }
 
+clean.dependsOn(":oidnjni:makeClean")
 
 ext.libraries = file("$buildDir/generated/libraries")
 

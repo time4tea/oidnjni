@@ -8,7 +8,7 @@ __check_defined = \
 
 $(call check_defined, JAVA_HOME, java home for jni include files)
 
-OIDN_VERSION=1.2.2
+OIDN_VERSION=1.2.4
 
 OIDN_NAME=oidn-$(OIDN_VERSION).x86_64.linux
 OIDN_PATH=$(realpath build/$(OIDN_NAME))
