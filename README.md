@@ -24,7 +24,7 @@ Its pretty good! - and is similar to outputs with many 1,000s of samples/pixel
 To install, add these dependencies to your **Gradle** file:
 ```groovy
 dependencies {
-    compile group: "net.time4tea", name: "oidnjni", version: "0.1.6"
+    compile group: "net.time4tea", name: "oidnjni", version: "0.1.13"
 }
 ```
 
