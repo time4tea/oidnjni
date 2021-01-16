@@ -5,18 +5,7 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-
-branch=${CI_BRANCH:-$(git rev-parse --abbrev-ref HEAD)}
-
-if [ $branch != "master" ]
-then
-  echo "Not making a release from a branch: $branch"
-  exit 0
-fi
-
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
-LOCAL_VERSION=$(jq -r .version $DIR/version.json)
+. ./release-functions.sh
 
 function maven_publish {
     local PACKAGE=$1
@@ -37,15 +26,8 @@ function maven_publish {
     fi
 }
 
-function ensure_release_commit {
-    local CHANGED_FILES=$(git diff-tree --no-commit-id --name-only -r HEAD)
-
-    if [[ "$CHANGED_FILES" != *version.json* ]]; then
-        echo "Version did not change on this commit. Ignoring"; exit 0;
-    fi
-}
-
 ensure_release_commit
+ensure_master
 
 maven_publish "oidnjni"
 

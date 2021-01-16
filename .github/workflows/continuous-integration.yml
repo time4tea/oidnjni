@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - master
-  pull_request:
-    branches:
-      - master
 
 jobs:
   continuous-integration:
@@ -22,7 +19,23 @@ jobs:
       - name: Build and Unit Test
         run: ./gradlew test jar
       - name: Upload to Bintray
+        env:
+          BINTRAY_API_KEY: ${{ secrets.BINTRAY_API_KEY }}
+          BINTRAY_GPG_PASSPHRASE: ${{ secrets.BINTRAY_GPG_PASSPHRASE }}
+          BINTRAY_USER: ${{ secrets.BINTRAY_USER }}
+          SONATYPE_USER: ${{ secrets.SONATYPE_USER }}
+          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
         run: ./release-ci.sh
+      - name: Tag Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./release-tag.sh
       - name: Upload to Maven Central
+        env:
+          BINTRAY_API_KEY: ${{ secrets.BINTRAY_API_KEY }}
+          BINTRAY_GPG_PASSPHRASE: ${{ secrets.BINTRAY_GPG_PASSPHRASE }}
+          BINTRAY_USER: ${{ secrets.BINTRAY_USER }}
+          SONATYPE_USER: ${{ secrets.SONATYPE_USER }}
+          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
         run: ./release-maven-central.sh
 

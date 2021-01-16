@@ -1,0 +1,21 @@
+name: Build and Unit Test
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  continuous-integration:
+    runs-on: ubuntu-latest
+    environment:
+      name: continuous-integration
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set Up Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.11
+      - name: Build and Unit Test
+        run: ./gradlew test jar
+
