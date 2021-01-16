@@ -11,7 +11,10 @@ jobs:
     environment:
       name: continuous-integration
     steps:
+      # Need some depth to figure out what changed from previous commit (e.g. version.json)
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
       - name: Set Up Java
         uses: actions/setup-java@v1
         with:
