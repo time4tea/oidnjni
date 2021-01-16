@@ -9,6 +9,8 @@ set -o nounset
 
 ensure_master
 
+echo "Bintray User = '$BINTRAY_USER'"
+
 BINTRAY_VERSION=`curl -s https://bintray.com/api/v1/packages/time4tea/oss/oidnjni/versions/_latest | jq -r .name`
 
 if [[ "$LOCAL_VERSION" == "$BINTRAY_VERSION" ]]; then
