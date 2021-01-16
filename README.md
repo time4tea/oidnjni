@@ -1,24 +1,23 @@
-### Kotlin / JNI Interface to Intel OIDN Image Denoise Library
+### Kotlin / Java JNI Interface to Intel Image Denoise Library (OIDN)
 
-[![Codeship Status for time4tea/oidnjni](https://app.codeship.com/projects/18071270-27e7-0138-360a-1a649adba10d/status?branch=master)](https://app.codeship.com/projects/383796)
 ![Bintray](https://img.shields.io/bintray/v/time4tea/oss/oidnjni)
 ![Maven Central](https://img.shields.io/maven-central/v/net.time4tea/oidnjni)
 
 These plots show the before and after for an image generated on a 
 [toy raytracer](https://github.com/time4tea/raytrace-in-a-weekend-kotlin) 
 
-The source image was generated using monte-carlo tracing with 100 samples/pixel. The scene renders in 34s.
+The source image was generated with a low number of samples/pixel.
 This was then passed through the OIDN-JNI library - with the result as shown.
 
 Its pretty good! - and is similar to outputs with many 1,000s of samples/pixel
 
 ## Before
 
-![Example](oidnkt/src/test/resources/weekfinal.png)
+![Example](oidnkt/src/test/resources/example-cornellbox-rendered.png)
 
 ## After
 
-![Example](example-output/weekfinal.png)
+![Example](example-output/example-cornellbox-denoised.png)
 
 ## Installing
 

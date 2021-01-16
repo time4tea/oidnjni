@@ -9,6 +9,9 @@ import java.awt.image.BufferedImage
 import java.io.File
 import javax.imageio.ImageIO
 
+fun BufferedImage.variance(): Double {
+    return OidnTest.ImageVariance(this).imageVariance()
+}
 
 class OidnTest {
 
@@ -55,7 +58,7 @@ class OidnTest {
         val oidn = Oidn()
 
         // Load an image this will have "normal" pixel layout
-        val imageName = "weekfinal.png"
+        val imageName = "example-cornellbox-rendered.png"
         val imageInIntPixelLayout = javaClass.getResourceAsStream("""/$imageName""").use {
             ImageIO.read(it)
         }
@@ -69,8 +72,7 @@ class OidnTest {
         val color = Oidn.allocateBufferFor(imageInIntPixelLayout).also { imageInCorrectPixelLayout.copyTo(it) }
         val output = Oidn.allocateBufferFor(imageInIntPixelLayout)
 
-        val variance = ImageVariance(imageInCorrectPixelLayout)
-        val beforeVariance = variance.imageVariance()
+        val beforeVariance = imageInCorrectPixelLayout.variance()
 
         // set up OIDN and run denoise filter
         oidn.newDevice(Oidn.DeviceType.DEVICE_TYPE_DEFAULT).use { device ->
@@ -87,7 +89,7 @@ class OidnTest {
         // Copy output pixel data to displayable image
         output.copyTo(imageInCorrectPixelLayout)
 
-        val afterVariance = variance.imageVariance()
+        val afterVariance = imageInCorrectPixelLayout.variance()
 
         assertThat("before image should have content", beforeVariance, !equalTo(0.0))
         assertThat("after image should have content", afterVariance, !equalTo(0.0))
