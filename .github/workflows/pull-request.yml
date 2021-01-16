@@ -8,8 +8,6 @@ on:
 jobs:
   continuous-integration:
     runs-on: ubuntu-latest
-    environment:
-      name: continuous-integration
     steps:
       - uses: actions/checkout@v2
       - name: Set Up Java
