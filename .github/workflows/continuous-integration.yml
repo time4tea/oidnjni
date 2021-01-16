@@ -1,4 +1,4 @@
-name: Build and Deploy to BinTray
+name: Build and Deploy
 
 on:
   push:
