@@ -18,12 +18,28 @@ description = 'Java/Kotlin Interface to Intel Open Image Denoise - OIDN - librar
 
 def headless = System.getenv("DISPLAY") == null
 
+def figureOutPlatform() {
+    def os = System.getProperty("os.name").toLowerCase()
+    switch (os) {
+        case "linux": "linux"
+            break
+        case "mac os x": "darwin"
+            break
+        default:
+            throw new IllegalArgumentException("Platform '$os' is not supported")
+    }
+}
+
+def platform = figureOutPlatform()
+
+println "platform = $platform"
+
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    implementation project(":oidnjni-linux")
+    implementation project(":oidnjni-$platform")
     testImplementation testing
 }
 
