@@ -1,1 +1,28 @@
 
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+}
+
+plugins {
+    id "org.jetbrains.kotlin.jvm" version "1.4.32"
+    id "de.undercouch.download" version "4.1.1"
+}
+
+ext {
+    oidnjni_version = project.hasProperty('releaseVersion') ? project.releaseVersion : 'LOCAL'
+    oidnlib_version = "1.2.4"
+}
+
+
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+
+    apply plugin: "kotlin"
+}

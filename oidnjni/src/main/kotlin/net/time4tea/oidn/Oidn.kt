@@ -32,23 +32,9 @@ class Oidn {
 
     class OidnLibraryNotFoundError(s: String?, cause: Throwable?) : LinkageError(s, cause)
 
-    data class Library(val name: String, val version: Int? = null) {
-        fun filename(): String {
-            return if (version == null) {
-                "lib$name.so"
-            } else {
-                "lib$name.so.$version"
-            }
-        }
-    }
-
     companion object {
-        private val libraries = listOf(
-            Library("tbb", 2),
-            Library("tbbmalloc", 2),
-            Library("OpenImageDenoise"),
-            Library("oidnjni")
-        )
+
+        val libraries = OidnLibrary.libraries
 
         init {
             loadLibrary()
@@ -57,20 +43,22 @@ class Oidn {
         fun loadLibrary() {
             val directory = Files.createTempDirectory("oidn").toFile().also { it.deleteOnExit() }
             libraries.forEach {
-                val lib = copyLibrary(it, directory)
+                val lib = copyLibrary(it, directory).also { l -> l.deleteOnExit() }
                 try {
                     System.load(lib.absolutePath)
                 } catch (e: UnsatisfiedLinkError) {
                     throw OidnLibraryNotFoundError("Unable to load $it", e)
                 }
             }
+            println()
         }
 
         private fun copyLibrary(resource: Library, directory: File): File {
             val filename = resource.filename()
             val destination = File(directory, filename)
             destination.outputStream().use { dest ->
-                val stream = Oidn::class.java.getResourceAsStream("/$filename") ?: throw FileNotFoundException(filename)
+                val resourceFilename = "/lib/$filename"
+                val stream = Oidn::class.java.getResourceAsStream(resourceFilename) ?: throw FileNotFoundException(resourceFilename)
                 stream.use { source ->
                     source.copyTo(dest)
                 }

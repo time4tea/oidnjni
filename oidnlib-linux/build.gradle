@@ -1,0 +1,44 @@
+plugins {
+    id "de.undercouch.download"
+    id 'java'
+}
+
+version = rootProject.ext.oidnlib_version
+
+ext {
+    oidn_filename = "oidn-${version}.x86_64.linux.tar.gz"
+    libraries = file("$buildDir/generated/libraries")
+}
+
+description = 'Java/Kotlin Interface to Intel Open Image Denoise - OIDN Library / Linux'
+
+sourceSets {
+    main {
+        resources {
+            srcDirs "src/main/resources", libraries
+        }
+    }
+}
+
+task downloadZipfile(type: Download) {
+    src "https://github.com/OpenImageDenoise/oidn/releases/download/v${version}/${oidn_filename}"
+    dest buildDir
+    overwrite false
+}
+
+task unzip(dependsOn: downloadZipfile, type: Copy) {
+    eachFile {
+        path -= ~/^.+?\//
+    }
+    from tarTree("${buildDir}/${oidn_filename}").matching {
+        exclude "**/bin/**"
+        exclude "**/doc/**"
+        exclude "**/cmake/**"
+    }
+    into libraries
+
+    includeEmptyDirs = false
+}
+
+jar.dependsOn unzip
+

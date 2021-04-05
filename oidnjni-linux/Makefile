@@ -1,0 +1,35 @@
+check_defined = \
+    $(strip $(foreach 1,$1, \
+        $(call __check_defined,$1,$(strip $(value 2)))))
+__check_defined = \
+    $(if $(value $1),, \
+      $(error Undefined $1$(if $2, ($2))))
+
+
+$(call check_defined, JAVA_HOME, java home for jni include files)
+
+OIDN_PATH=build
+
+JNI_INCLUDE=$(JAVA_HOME)/include $(JAVA_HOME)/include/linux
+OIDN_INCLUDE=$(OIDN_PATH)/include
+OIDN_LIB=$(OIDN_PATH)/lib
+
+INCLUDE=$(JNI_INCLUDE) $(OIDN_INCLUDE)
+LIB=$(OIDN_LIB)
+
+SRCS=src/main/c/*.c
+
+all: build/liboidnjni.so
+
+print-%  : ; @echo $* = $($*)
+
+build/liboidnjni.so: $(UNPACKED_LIB) $(SRCS)
+	$(CC) -shared -fpic -Werror -Wall -Wl,--no-as-needed $(foreach d, $(INCLUDE), -I$d) $(foreach d, $(LIB), -L$d) -l:libOpenImageDenoise.so.1.2.4 $(SRCS) -o $@
+
+.PHONY: clean
+clean:
+	rm -f build/lib*.so
+
+.PHONY: distclean
+distclean:
+	rm -rf build
