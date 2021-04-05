@@ -10,21 +10,21 @@ $(call check_defined, JAVA_HOME, java home for jni include files)
 
 OIDN_PATH=build
 
-JNI_INCLUDE=$(JAVA_HOME)/include $(JAVA_HOME)/include/linux
+JNI_INCLUDE=$(JAVA_HOME)/include $(JAVA_HOME)/include/darwin
 OIDN_INCLUDE=$(OIDN_PATH)/include
 OIDN_LIB=$(OIDN_PATH)/lib
 
 INCLUDE=$(JNI_INCLUDE) $(OIDN_INCLUDE)
 LIB=$(OIDN_LIB)
 
-SRCS=../../oidnjni-linux/src/main/c/*.c
+SRCS=../oidnjni-linux/src/main/c/*.c
 
-all: build/liboidnjni.so
+all: build/liboidnjni.dylib
 
 print-%  : ; @echo $* = $($*)
 
-build/liboidnjni.so: $(UNPACKED_LIB) $(SRCS)
-	$(CC) -shared -fpic -Werror -Wall -Wl,--no-as-needed $(foreach d, $(INCLUDE), -I$d) $(foreach d, $(LIB), -L$d) -l:libOpenImageDenoise.so.1.2.4 $(SRCS) -o $@
+build/liboidnjni.dylib: $(SRCS)
+	$(CC) -shared -fpic -Werror -Wall $(LINK_FLAGS) $(foreach d, $(INCLUDE), -I$d) $(foreach d, $(LIB), -L$d) $(LIB)/libOpenImageDenoise.1.2.4.dylib $(SRCS) -o $@
 
 .PHONY: clean
 clean:

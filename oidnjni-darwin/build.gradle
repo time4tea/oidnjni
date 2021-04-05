@@ -27,8 +27,8 @@ sourceSets {
 }
 
 dependencies {
-    implementation project(":oidnlib-linux")
-    library project(path: ":oidnlib-linux", configuration: "archives")
+    implementation project(":oidnlib-darwin")
+    library project(path: ":oidnlib-darwin", configuration: "archives")
 }
 
 task unpack(type: Copy) {
@@ -44,6 +44,7 @@ task copyLibraries(type: Copy) {
     dependsOn make
     from buildDir
     include "*.so"
+    include "*.dylib"
     into "${compiled}/lib"
 }
 
