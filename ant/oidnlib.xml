@@ -3,22 +3,22 @@
     <property name="oidn.download.location" location="${dir.download}/oidn"/>
 
     <property name="oidn.linux.name" value="oidn-${oidn.lib.version}.x86_64.linux"/>
-    <property name="oidn.darwin.name" value="oidn-${oidn.lib.version}.x86_64.macos"/>
+    <property name="oidn.macos.name" value="oidn-${oidn.lib.version}.x86_64.macos"/>
 
     <property name="oidnlib.linux.tar.file" value="${oidn.linux.name}.tar.gz"/>
-    <property name="oidnlib.darwin.tar.file" value="${oidn.darwin.name}.tar.gz"/>
+    <property name="oidnlib.macos.tar.file" value="${oidn.macos.name}.tar.gz"/>
 
     <property name="oidnlib.linux.tar.path" value="${oidn.download.location}/${oidnlib.linux.tar.file}"/>
-    <property name="oidnlib.darwin.tar.path" value="${oidn.download.location}/${oidnlib.darwin.tar.file}"/>
+    <property name="oidnlib.macos.tar.path" value="${oidn.download.location}/${oidnlib.macos.tar.file}"/>
 
     <property name="oidnlib.linux.base" location="${oidn.download.location}/${oidn.linux.name}"/>
-    <property name="oidnlib.darwin.base" location="${oidn.download.location}/${oidn.darwin.name}"/>
+    <property name="oidnlib.macos.base" location="${oidn.download.location}/${oidn.macos.name}"/>
 
     <target name="oidn.download.prepare">
         <mkdir dir="${oidn.download.location}"/>
     </target>
 
-    <target name="oidnlib.download" depends="oidnlib.download.linux, oidnlib.download.darwin"/>
+    <target name="oidnlib.download" depends="oidnlib.download.linux, oidnlib.download.macos"/>
 
     <target name="oidnlib.download.linux" depends="oidnlib.download.linux.check, oidnlib.download.linux.http"/>
 
@@ -43,27 +43,27 @@
         <untar compression="gzip" src="${oidnlib.linux.tar.path}" dest="${oidn.download.location}"/>
     </target>
 
-    <target name="oidnlib.download.darwin" depends="oidnlib.download.darwin.check, oidnlib.download.darwin.http"/>
+    <target name="oidnlib.download.macos" depends="oidnlib.download.macos.check, oidnlib.download.macos.http"/>
 
-    <target name="oidnlib.download.darwin.check">
-        <available file="${oidnlib.darwin.tar.path}" property="oidnlib.darwin.downloaded.already"/>
+    <target name="oidnlib.download.macos.check">
+        <available file="${oidnlib.macos.tar.path}" property="oidnlib.macos.downloaded.already"/>
     </target>
 
-    <target name="oidnlib.download.darwin.http"
+    <target name="oidnlib.download.macos.http"
             depends="oidn.download.prepare"
-            unless="oidnlib.darwin.downloaded.already">
-        <get src="https://github.com/OpenImageDenoise/oidn/releases/download/v${oidn.lib.version}/${oidnlib.darwin.tar.file}"
-             dest="${oidnlib.darwin.tar.path}"/>
+            unless="oidnlib.macos.downloaded.already">
+        <get src="https://github.com/OpenImageDenoise/oidn/releases/download/v${oidn.lib.version}/${oidnlib.macos.tar.file}"
+             dest="${oidnlib.macos.tar.path}"/>
     </target>
 
-    <target name="oidnlib.unzip.darwin" depends="oidnlib.unzip.darwin.check, oidnlib.unzip.darwin.exec"/>
+    <target name="oidnlib.unzip.macos" depends="oidnlib.unzip.macos.check, oidnlib.unzip.macos.exec"/>
 
-    <target name="oidnlib.unzip.darwin.check">
-        <available file="${oidnlib.darwin.base}" property="oidn.darwin.uptodate"/>
+    <target name="oidnlib.unzip.macos.check">
+        <available file="${oidnlib.macos.base}" property="oidn.macos.uptodate"/>
     </target>
 
-    <target name="oidnlib.unzip.darwin.exec" depends="oidnlib.download.darwin" unless="oidn.darwin.uptodate">
-        <untar compression="gzip" src="${oidnlib.darwin.tar.path}" dest="${oidn.download.location}"/>
+    <target name="oidnlib.unzip.macos.exec" depends="oidnlib.download.macos" unless="oidn.macos.uptodate">
+        <untar compression="gzip" src="${oidnlib.macos.tar.path}" dest="${oidn.download.location}"/>
     </target>
     
 </project>

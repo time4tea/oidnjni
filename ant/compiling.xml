@@ -61,7 +61,7 @@
         <os family="mac"/>
     </condition>
 
-    <target name="build.jni.native" depends="build.jni.native.linux, build.jni.native.darwin"/>
+    <target name="build.jni.native" depends="build.jni.native.linux, build.jni.native.macos"/>
 
     <property name="location.build.jni.linux" location="${location.build}/linux/lib"/>
 
@@ -77,17 +77,17 @@
         </exec>
     </target>
 
-    <property name="location.build.jni.darwin" location="${location.build}/darwin/lib"/>
+    <property name="location.build.jni.macos" location="${location.build}/macos/lib"/>
 
-    <target name="build.jni.native.darwin" depends="oidnlib.unzip.darwin" if="building.on.mac">
-        <mkdir dir="${location.build.jni.darwin}"/>
+    <target name="build.jni.native.macos" depends="oidnlib.unzip.macos" if="building.on.mac">
+        <mkdir dir="${location.build.jni.macos}"/>
         <exec dir="src/main/oidnjni-native" executable="make">
             <env key="JAVA_HOME" value="${java.home}"/>
             <env key="OIDNLIB_VERSION" value="${oidn.lib.version}"/>
-            <env key="OIDN_PATH" value="${oidnlib.darwin.base}"/>
-            <env key="OUTPUT" value="${location.build.jni.darwin}"/>
+            <env key="OIDN_PATH" value="${oidnlib.macos.base}"/>
+            <env key="OUTPUT" value="${location.build.jni.macos}"/>
             <arg value="-f"/>
-            <arg value="Makefile.darwin"/>
+            <arg value="Makefile.macos"/>
         </exec>
     </target>
 
