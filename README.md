@@ -9,11 +9,11 @@ Its a Kotlin library and JNI interface to the [Intel Open Image Denoise Library]
 
 ## Before
 
-![Example](oidnkt/src/test/resources/example-cornellbox-rendered.png)
+![Example](src/test/resources/example-cornellbox-rendered.png)
 
 ## After
 
-![Example](example-output/example-cornellbox-denoised.png)
+![Example](example-output/example-cornellbox-rendered.png)
 
 ## Installing
 
