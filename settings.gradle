@@ -1,4 +1,0 @@
-rootProject.name = 'oidnlib'
-include "oidnjni"
-include "oidnkt"
-

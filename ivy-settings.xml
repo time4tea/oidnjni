@@ -1,0 +1,8 @@
+<ivysettings>
+    <settings defaultResolver="default"/>
+    <resolvers >
+        <chain name="default" returnFirst="true" checkmodified="false">
+            <ibiblio name="maven2" m2compatible="true"/>
+        </chain>
+    </resolvers>
+</ivysettings>

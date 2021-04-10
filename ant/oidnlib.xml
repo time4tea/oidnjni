@@ -1,0 +1,69 @@
+<project name="oidnlib">
+
+    <property name="oidn.download.location" location="${dir.download}/oidn"/>
+
+    <property name="oidn.linux.name" value="oidn-${oidn.lib.version}.x86_64.linux"/>
+    <property name="oidn.darwin.name" value="oidn-${oidn.lib.version}.x86_64.macos"/>
+
+    <property name="oidnlib.linux.tar.file" value="${oidn.linux.name}.tar.gz"/>
+    <property name="oidnlib.darwin.tar.file" value="${oidn.darwin.name}.tar.gz"/>
+
+    <property name="oidnlib.linux.tar.path" value="${oidn.download.location}/${oidnlib.linux.tar.file}"/>
+    <property name="oidnlib.darwin.tar.path" value="${oidn.download.location}/${oidnlib.darwin.tar.file}"/>
+
+    <property name="oidnlib.linux.base" location="${oidn.download.location}/${oidn.linux.name}"/>
+    <property name="oidnlib.darwin.base" location="${oidn.download.location}/${oidn.darwin.name}"/>
+
+    <target name="oidn.download.prepare">
+        <mkdir dir="${oidn.download.location}"/>
+    </target>
+
+    <target name="oidnlib.download" depends="oidnlib.download.linux, oidnlib.download.darwin"/>
+
+    <target name="oidnlib.download.linux" depends="oidnlib.download.linux.check, oidnlib.download.linux.http"/>
+
+    <target name="oidnlib.download.linux.check">
+        <available file="${oidnlib.linux.tar.path}" property="oidnlib.linux.downloaded.already"/>
+    </target>
+
+    <target name="oidnlib.download.linux.http"
+            depends="oidn.download.prepare"
+            unless="oidnlib.linux.downloaded.already">
+        <get src="https://github.com/OpenImageDenoise/oidn/releases/download/v${oidn.lib.version}/${oidnlib.linux.tar.file}"
+             dest="${oidnlib.linux.tar.path}"/>
+    </target>
+
+    <target name="oidnlib.unzip.linux" depends="oidnlib.unzip.linux.check, oidnlib.unzip.linux.exec"/>
+
+    <target name="oidnlib.unzip.linux.check">
+        <available file="${oidnlib.linux.base}" property="oidn.linux.uptodate"/>
+    </target>
+
+    <target name="oidnlib.unzip.linux.exec" depends="oidnlib.download.linux" unless="oidn.linux.uptodate">
+        <untar compression="gzip" src="${oidnlib.linux.tar.path}" dest="${oidn.download.location}"/>
+    </target>
+
+    <target name="oidnlib.download.darwin" depends="oidnlib.download.darwin.check, oidnlib.download.darwin.http"/>
+
+    <target name="oidnlib.download.darwin.check">
+        <available file="${oidnlib.darwin.tar.path}" property="oidnlib.darwin.downloaded.already"/>
+    </target>
+
+    <target name="oidnlib.download.darwin.http"
+            depends="oidn.download.prepare"
+            unless="oidnlib.darwin.downloaded.already">
+        <get src="https://github.com/OpenImageDenoise/oidn/releases/download/v${oidn.lib.version}/${oidnlib.darwin.tar.file}"
+             dest="${oidnlib.darwin.tar.path}"/>
+    </target>
+
+    <target name="oidnlib.unzip.darwin" depends="oidnlib.unzip.darwin.check, oidnlib.unzip.darwin.exec"/>
+
+    <target name="oidnlib.unzip.darwin.check">
+        <available file="${oidnlib.darwin.base}" property="oidn.darwin.uptodate"/>
+    </target>
+
+    <target name="oidnlib.unzip.darwin.exec" depends="oidnlib.download.darwin" unless="oidn.darwin.uptodate">
+        <untar compression="gzip" src="${oidnlib.darwin.tar.path}" dest="${oidn.download.location}"/>
+    </target>
+    
+</project>

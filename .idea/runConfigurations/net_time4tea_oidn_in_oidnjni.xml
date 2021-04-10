@@ -1,0 +1,20 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="net.time4tea.oidn in oidnjni" type="JUnit" factoryName="JUnit" nameIsGenerated="true">
+    <module name="oidnjni" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="net.time4tea.oidn.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <option name="PACKAGE_NAME" value="net.time4tea.oidn" />
+    <option name="MAIN_CLASS_NAME" value="" />
+    <option name="METHOD_NAME" value="" />
+    <option name="TEST_OBJECT" value="package" />
+    <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+      <option name="AntTarget" enabled="true" antfile="file://$PROJECT_DIR$/build.xml" target="build.jni.native" />
+    </method>
+  </configuration>
+</component>

@@ -1,8 +1,4 @@
-.env
-/.gradle/
-/oidnkt/build/
-/oidnkt/out/
-/oidnjni/build/
-/build/
-/.idea/
-/oidn.iml
+
+/out/
+/lib/
+/download/

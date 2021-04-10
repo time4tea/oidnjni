@@ -1,0 +1,17 @@
+<ivy-module version="2.0">
+    <info organisation="time4tea" module="production"/>
+
+    <configurations defaultconfmapping="runtime->default;test->default;kotlin->default">
+        <conf name="kotlin"/>
+        <conf name="runtime" />
+        <conf name="test"/>
+    </configurations>
+
+    <dependencies>
+        <dependency conf="kotlin" org="org.jetbrains.kotlin" name="kotlin-stdlib-jdk8" rev="1.4.32"/>
+
+        <dependency conf="test" org="com.natpryce" name="hamkrest" rev="1.8.0.1"/>
+        <dependency conf="test" org="org.junit.jupiter" name="junit-jupiter-engine" rev="5.5.2"/>
+
+    </dependencies>
+</ivy-module>

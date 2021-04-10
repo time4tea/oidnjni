@@ -1,0 +1,39 @@
+<project name="download"
+         xmlns:ivy="antlib:org.apache.ivy.ant">
+
+    <import file="ivy.xml"/>
+
+    <property name="libs.kotlin" location="${dir.libs}/kotlin"/>
+    <property name="libs.runtime.production" location="${dir.libs}/production"/>
+    <property name="libs.runtime.test" location="${dir.libs}/test"/>
+
+    <target name="download.prepare">
+        <mkdir dir="download"/>
+    </target>
+
+    <target name="dependencies.ivy" depends="dependencies.ivy.resolve"/>
+
+    <target name="dependencies.ivy.again" depends="dependencies.ivy.clean, dependencies.ivy.resolve"/>
+
+    <target name="dependencies.ivy.clean">
+        <delete dir="lib/production"/>
+        <delete dir="lib/production"/>
+        <delete dir="lib/kotlin"/>
+    </target>
+
+    <target name="dependencies.ivy.resolve" depends="ivy.init" description="Download all ivy dependencies">
+        <!--        Ivy doesn't mind creating dirs, but Ant doesn't like paths of missing dirs-->
+        <mkdir dir="${libs.kotlin}"/>
+        <mkdir dir="${libs.runtime.production}"/>
+        <mkdir dir="${libs.runtime.test}"/>
+
+        <ivy:configure file="ivy-settings.xml"/>
+
+        <ivy:resolve log="quiet" file="ivy-dependencies.xml"/>
+        <ivy:report todir="out/ivy/production"/>
+        <ivy:retrieve conf="kotlin" pattern="${libs.kotlin}/[type]/[artifact]-[revision].[ext]"/>
+        <ivy:retrieve conf="runtime" pattern="${libs.runtime.production}/[type]/[artifact]-[revision].[ext]"/>
+        <ivy:retrieve conf="test"    pattern="${libs.runtime.test}/[type]/[artifact]-[revision].[ext]"/>
+    </target>
+
+</project>

@@ -1,0 +1,27 @@
+<project name="oidn-project" default="build">
+
+    <property name="oidnjni.version" value="DEVELOPER-BUILD"/>
+    <property name="oidn.lib.version" value="1.2.4"/>
+
+    <property name="dir.libs" location="lib"/>
+    <property name="dir.download" location="download"/>
+
+    <import file="ant/dependencies.xml"/>
+    <import file="ant/oidnlib.xml"/>
+    <import file="ant/kotlin.xml"/>
+    <import file="ant/compiling.xml"/>
+    <import file="ant/jarfiles.xml"/>
+
+    <target name="init" depends="kotlin.define, dependencies.ivy"/>
+
+    <target name="build" depends="build.kotlin"/>
+
+    <target name="clean">
+        <delete dir="out"/>
+    </target>
+
+    <target name="clean.dist" depends="clean">
+        <delete dir="download"/>
+    </target>
+
+</project>

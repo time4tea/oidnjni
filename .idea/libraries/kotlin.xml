@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="kotlin">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/lib/kotlin/jar" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/kotlin/jar" recursive="false" />
+  </library>
+</component>

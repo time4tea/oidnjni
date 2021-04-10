@@ -1,0 +1,54 @@
+<project name="jarfiles">
+
+    <property name="location.jarfiles" location="out/distributions"/>
+
+    <property name="jar.oidnlib.linux.path" location="${location.jarfiles}/oidn-native-linux-${oidn.lib.version}.jar"/>
+    <property name="jar.oidnlib.darwin.path" location="${location.jarfiles}/oidn-native-darwin-${oidn.lib.version}.jar"/>
+
+    <property name="jar.oidnjni.path" location="${location.jarfiles}/oidnjni-${oidn.lib.version}.jar"/>
+
+    <property name="jar.oidnjni.linux.path" location="${location.jarfiles}/oidnjni-native-linux-${oidnjni.version}.jar"/>
+    <property name="jar.oidnjni.darwin.path" location="${location.jarfiles}/oidnjni-native-darwin-${oidnjni.version}.jar"/>
+
+    <target name="jarfiles" depends="jar.oidnlib, jar.oidnjni.kotlin, jar.oidnjni.native"/>
+
+    <target name="jar.oidnlib" depends="jar.oidnlib.linux, jar.oidnlib.darwin"/>
+
+    <target name="jar.oidnlib.linux">
+        <jar jarfile="${jar.oidnlib.linux.path}">
+            <fileset dir="${oidnlib.linux.base}">
+                <include name="lib/**"/>
+                <exclude name="**/cmake/**"/>
+            </fileset>
+        </jar>
+    </target>
+
+    <target name="jar.oidnlib.darwin">
+        <jar jarfile="${jar.oidnlib.darwin.path}">
+            <fileset dir="${oidnlib.darwin.base}">
+                <include name="lib/**"/>
+                <exclude name="**/cmake/**"/>
+            </fileset>
+        </jar>
+    </target>
+
+    <target name="jar.oidnjni.kotlin">
+        <jar jarfile="${jar.oidnjni.path}">
+            <fileset dir="${build.jni.kotlin.output}"/>
+        </jar>
+    </target>
+
+    <target name="jar.oidnjni.native" depends="jar.oidnjni.native.linux, jar.oidnjni.native.darwin"/>
+
+    <target name="jar.oidnjni.native.linux" if="building.on.linux">
+        <jar jarfile="${jar.oidnjni.linux.path}">
+            <fileset dir="${location.build.jni.linux}"/>
+        </jar>
+    </target>
+
+    <target name="jar.oidnjni.native.darwin" if="building.on.mac">
+        <jar jarfile="${jar.oidnjni.darwin.path}">
+            <fileset dir="${location.build.jni.darwin}"/>
+        </jar>
+    </target>
+</project>

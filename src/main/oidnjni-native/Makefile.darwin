@@ -1,0 +1,37 @@
+check_defined = \
+    $(strip $(foreach 1,$1, \
+        $(call __check_defined,$1,$(strip $(value 2)))))
+__check_defined = \
+    $(if $(value $1),, \
+      $(error Undefined $1$(if $2, ($2))))
+
+
+$(call check_defined, JAVA_HOME, java home for jni include files)
+$(call check_defined, OIDNLIB_VERSION, oidn version to build)
+
+$(call check_defined, OUTPUT, place to put built things)
+$(call check_defined, OIDN_PATH, path to OIDN distribution)
+
+JNI_INCLUDE=$(JAVA_HOME)/include $(JAVA_HOME)/include/darwin
+OIDN_INCLUDE=$(OIDN_PATH)/include
+OIDN_LIB=$(OIDN_PATH)/lib
+
+INCLUDE=$(JNI_INCLUDE) $(OIDN_INCLUDE)
+LIB=$(OIDN_LIB)
+
+SRCS=*.c
+
+all: $(OUTPUT)/liboidnjni.dylib
+
+print-%  : ; @echo $* = $($*)
+
+$(OUTPUT)/liboidnjni.dylib: $(SRCS)
+	$(CC) -shared -fpic -Werror -Wall $(LINK_FLAGS) $(foreach d, $(INCLUDE), -I$d) $(foreach d, $(LIB), -L$d) $(LIB)/libOpenImageDenoise.$(OIDNLIB_VERSION).dylib $(SRCS) -o $@
+
+.PHONY: clean
+clean:
+	rm -f build/lib*.so
+
+.PHONY: distclean
+distclean:
+	rm -rf build

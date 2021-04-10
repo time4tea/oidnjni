@@ -1,0 +1,6 @@
+#!/bin/bash
+
+export ANT_HOME=apache-ant-1.10.9
+export ANT_OPTS=-Dbuild.sysclasspath=ignore
+
+$ANT_HOME/bin/ant $@
