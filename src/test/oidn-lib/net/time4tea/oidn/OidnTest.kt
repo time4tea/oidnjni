@@ -52,7 +52,7 @@ class OidnTest {
     }
 
     @Volatile //just a hack so we don't get "always false" warnings
-    private var displaying = false//!System.getProperty("java.awt.headless", "false").toBoolean()
+    private var displaying = !System.getProperty("java.awt.headless", "false").toBoolean()
 
     class TestLocator : LibraryLocator {
         val possibles = listOf(
