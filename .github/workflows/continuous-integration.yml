@@ -21,7 +21,7 @@ jobs:
         with:
           java-version: 1.11
       - name: Build and Unit Test
-        run: ./build ci-build
+        run: make setup test
       - name: Tag Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
