@@ -11,7 +11,7 @@
         <mkdir dir="download"/>
     </target>
 
-    <target name="dependencies.ivy" depends="dependencies.ivy.resolve"/>
+    <target name="dependencies" depends="dependencies.ivy.resolve"/>
 
     <target name="dependencies.ivy.again" depends="dependencies.ivy.clean, dependencies.ivy.resolve"/>
 

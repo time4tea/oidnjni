@@ -11,7 +11,7 @@
         <dependency conf="kotlin" org="org.jetbrains.kotlin" name="kotlin-stdlib-jdk8" rev="1.4.32"/>
 
         <dependency conf="test" org="com.natpryce" name="hamkrest" rev="1.8.0.1"/>
-        <dependency conf="test" org="org.junit.jupiter" name="junit-jupiter-engine" rev="5.5.2"/>
-
+        <dependency conf="test" org="org.junit.jupiter" name="junit-jupiter-engine" rev="5.7.1"/>
+        <dependency conf="test" org="org.junit.platform" name="junit-platform-console" rev="1.7.1"/>
     </dependencies>
 </ivy-module>

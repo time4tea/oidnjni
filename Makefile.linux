@@ -1,0 +1,22 @@
+
+TAR=tar
+
+OIDN_PATH=$(DOWNLOAD_OIDN)/oidn-$(OIDN_VERSION).$(LINUX)
+
+JNI_INCLUDE=$(JAVA_HOME)/include $(JAVA_HOME)/include/linux
+OIDN_INCLUDE=$(OIDN_PATH)/include
+OIDN_LIB=$(OIDN_PATH)/lib
+
+INCLUDE=$(JNI_INCLUDE) $(OIDN_INCLUDE)
+LIB=$(OIDN_LIB)
+
+.PHONY: jni
+jni: $(DISTRIBUTION)/oidnjni-linux-$(OIDNJNI_VERSION).jar
+
+$(TARGET)/linux/lib/liboidnjni.so: $(JNI_SRCS)
+	@mkdir -p $(dir $@)
+	$(CC) -shared -fpic -Werror -Wall -Wl,--no-as-needed $(foreach d, $(INCLUDE), -I$d) $(foreach d, $(LIB), -L$d) -l:libOpenImageDenoise.so.$(OIDN_VERSION) $(JNI_SRCS) -o $@
+
+$(DISTRIBUTION)/oidnjni-linux-$(OIDNJNI_VERSION).jar: $(TARGET)/linux/lib/liboidnjni.so
+	@mkdir -p $(dir $@)
+	$(JAR) cf $@ -C $(TARGET)/linux .

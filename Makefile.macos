@@ -1,0 +1,16 @@
+
+TAR=gtar
+
+JNI_INCLUDE=$(JAVA_HOME)/include $(JAVA_HOME)/include/linux
+OIDN_INCLUDE=$(OIDN_PATH)/include
+OIDN_LIB=$(OIDN_PATH)/lib
+
+INCLUDE=$(JNI_INCLUDE) $(OIDN_INCLUDE)
+LIB=$(OIDN_LIB)
+
+.PHONY: jni
+jni: $(OUTPUT)/macos/libs/liboidnjni.dylib
+
+$(OUTPUT)/macos/libs/liboidnjni.dylib: $(JNI_SRCS)
+	mkdir -p $(dir $@)
+	$(CC) -shared -fpic -Werror -Wall $(LINK_FLAGS) $(foreach d, $(INCLUDE), -I$d) $(foreach d, $(LIB), -L$d) $(LIB)/libOpenImageDenoise.$(OIDN_VERSION).dylib $(SRCS) -o $@

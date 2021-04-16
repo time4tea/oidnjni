@@ -58,8 +58,8 @@ class OidnTest {
         val possibles = listOf(
             File("download/oidn/oidn-1.2.4.x86_64.linux/lib"),
             File("download/oidn/oidn-1.2.4.x86_64.macos/lib"),
-            File("out/ant-build/linux/lib"),
-            File("out/ant-build/darwin/lib"),
+            File("out/linux/lib"),
+            File("out/darwin/lib"),
         )
 
         override fun locate(library: Library): File = possibles
